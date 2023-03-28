@@ -82,11 +82,11 @@ def process_expense_analysis(s3_connection, client, bucket, document):
     image.show()
 
 def main():
-    session = boto3.Session(profile_name='profile-name')
+    session = boto3.Session(profile_name='billok')
     s3_connection = session.resource('s3')
-    client = session.client('textract', region_name='region')
-    bucket = 'bucket'
-    document = 'document'
+    client = session.client('textract', region_name='us-east-1')
+    bucket = 'billfly-bucket'
+    document = 'invoice_1.jpg'
     process_expense_analysis(s3_connection, client, bucket, document)
 
 if __name__ == "__main__":
