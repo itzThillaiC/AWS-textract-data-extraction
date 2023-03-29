@@ -15,21 +15,46 @@ def draw_bounding_box(key, val, width, height, draw):
 
 # Takes a field as an argument and prints out the detected labels and values
 def print_labels_and_values(field):
-    # Only if labels are detected and returned
+    # Initialize sets to keep track of which values have already been printed
+    label_values = set()
+    value_values = set()
+
+    # Check if LabelDetection key exists
     if "LabelDetection" in field:
-        print("Summary Label Detection - Confidence: {}".format(
-            str(field.get("LabelDetection")["Confidence"])) + ", "
-              + "Summary Values: {}".format(str(field.get("LabelDetection")["Text"])))
-        print(field.get("LabelDetection")["Geometry"])
+        # Get label detection text value
+        label_value = str(field["LabelDetection"].get("Text", "")).strip()
+
+        # Check if label value has already been printed
+        if label_value not in label_values:
+            print("Summary Label Detection - Confidence: {}, Summary Values: {}".format(
+                str(field["LabelDetection"].get("Confidence", "")), label_value))
+            # Add label value to printed set
+            label_values.add(label_value)
+        else:
+            print("Repeated Summary Label Detection - Skipping")
+
     else:
         print("Label Detection - No labels returned.")
+    
+    # Check if ValueDetection key exists
     if "ValueDetection" in field:
-        print("Summary Value Detection - Confidence: {}".format(
-            str(field.get("ValueDetection")["Confidence"])) + ", "
-              + "Summary Values: {}".format(str(field.get("ValueDetection")["Text"])))
-        print(field.get("ValueDetection")["Geometry"])
+        # Get value detection text value
+        value_value = str(field["ValueDetection"].get("Text", "")).strip()
+
+        # Check if value value has already been printed
+        if value_value not in value_values:
+            print("Summary Value Detection - Confidence: {}, Summary Values: {}".format(
+                str(field["ValueDetection"].get("Confidence", "")), value_value))
+            # Add value value to printed set
+            value_values.add(value_value)
+        else:
+            print("Repeated Summary Value Detection - Skipping")
+
     else:
-        print("Value Detection - No values returned")
+        print("Value Detection - No values returned.")
+
+
+
 
 def process_expense_analysis(s3_connection, client, bucket, document):
         
